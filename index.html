@@ -34,4 +34,39 @@ VAR _b64 = _json
 
 RETURN
 "<iframe src='https://fasaclox.github.io/World_Map/?d=" & _b64 & "'
-style='position:fixed;top:0;left:0;width:100%;height:100%;border:none;'></iframe>"
+style='position:fixed;top:0;left:0;width:100%;height:100%;border:none;'></iframe>"Map Visual =
+VAR _rows =
+    CONCATENATEX(
+        ADDCOLUMNS(
+            SUMMARIZE('FactInjuries', 'DimLocation'[Country]),
+            "@ISO3",
+            SWITCH(DimLocation[Country],
+                "United Kingdom", "GBR",
+                "Czech Republic", "CZE",
+                "Switzerland",    "CHE",
+                "Germany",        "DEU",
+                "Norway",         "NOR",
+                "Poland",         "POL",
+                "France",         "FRA",
+                "Spain",          "ESP",
+                "Portugal",       "PRT",
+                "Sweden",         "SWE",
+                "Denmark",        "DNK",
+                "Italy",          "ITA",
+                "Netherlands",    "NLD",
+                "Belgium",        "BEL",
+                "Austria",        "AUT",
+                "XX"
+            ),
+            "@Val", [Recorded Injuries]
+        ),
+        [@ISO3] & ":" & FORMAT([@Val], "0"),
+        ","
+    )
+
+RETURN
+"<iframe src='https://fasaclox.github.io/World_Map/?rows=" 
+    & _rows 
+    & "&label=Recorded+Injuries&cl=f7e4ee&ch=48293E'
+    style='position:fixed;top:0;left:0;width:100%;height:100%;border:none;'>
+</iframe>"
